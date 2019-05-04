@@ -1,0 +1,60 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Nunito|Kodchasan:200,400,600");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+html,
+body {
+    color: #636b6f;
+    font-family: "Nunito", sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+nav {
+    font-family: "Kodchasan", sans-serif;
+    font-weight: 400;
+}
+
+.message {
+    text-align: left;
+    padding: 0 25px;
+}
+
+button,
+.btn {
+    font-family: "Kodchasan", sans-serif;
+}
+
+.navbar-laravel {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+p {
+    font-size: 18px;
+    img {
+        width: 100%;
+    }
+}
+
+.content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    margin-top: 60px;
+}
+
+.nav-item {
+    text-align: center;
+}
+
+@media (max-width: 620px) {
+    .content {
+        padding: 1em;
+    }
+}
