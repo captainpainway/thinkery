@@ -53,13 +53,15 @@ class MessagesController extends Controller
         $message->message = Input::get('message');
 
         $image = Input::file('image');
-        $ext = $image->getClientOriginalExtension();
-        Storage::disk('public')->put($image->getFilename() . '.' . $ext, File::get($image));
+        if ($image) {
+            $ext = $image->getClientOriginalExtension();
+            Storage::disk('public')->put($image->getFilename() . '.' . $ext, File::get($image));
+            $message->mime = $image->getClientMimeType();
+            $message->original_filename = $image->getClientOriginalName();
+            $message->filename = $image->getFilename() . '.' . $ext;
+        }
 
         $message->user = $user_id;
-        $message->mime = $image->getClientMimeType();
-        $message->original_filename = $image->getClientOriginalName();
-        $message->filename = $image->getFilename() . '.' . $ext;
         $message->save();
 
         return Redirect::to('posts');
