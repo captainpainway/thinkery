@@ -9,16 +9,31 @@
         <div class="flex-center position-ref">
 
             <div class="content">
-                {{ Form::open(array('url' => 'posts')) }}
+                {{ Form::open(array('url' => 'posts', 'files' => true)) }}
                     @csrf
                     <div class="form-group">
                         {{ Form::textarea('message', '', array('class' => 'form-control', 'id' => 'message-input', 'value' => 'What\'s your message?', 'rows' => 6, 'maxlength' => 500))}}
                     </div>
                     <div class="form-group row">
-                        <div class="col-2">
+                        <div class="col-1">
                             <span id="remaining-chars"></span>
                         </div>
-                        <div class="col-10 text-right">
+                        <div class="col-7" style="text-align: left">
+                            <label>
+                                {{ Form::file('image', array('id' => 'image-upload', 'class' => 'btn btn-primary hidden', 'accept' => 'image/x-png,image/gif,image/jpeg')) }}
+                                @php
+                                    $octicon = new Octicon();
+                                    $options = new Options();
+                                    $options->addClass('icon-btn');
+                                    $options->addClass('icon-edit');
+                                    $options->setRatio(2);
+                                    $icon = $octicon->icon('file-media', $options);
+                                    echo $icon->toSvg();
+                                @endphp
+                            </label>
+                            <span id="upload-name"></span>
+                        </div>
+                        <div class="col-4 text-right">
                             <a id="clear-btn" class="btn btn-default">Clear</a>
                             {{ Form::submit('Submit', array('class' => 'btn btn-primary'))}}
                         </div>
@@ -29,6 +44,9 @@
                         @foreach ($messages as $key => $message)
                         <div class="message">
                             <p>@parsedown($message->message)</p>
+                            @if ($message->filename)
+                                <p><a href="{{url('uploads/' . $message->filename)}}"><img src="{{url('uploads/' . $message->filename)}}"/></a></p>
+                            @endif
                             <p class="small"><span>Post #{{ $message->id }}: </span><span class="date">{{ $message->created_at }}</span></p>
                             <div class="form-group text-right">
                                 {{ Form::open(array('route' => array('posts.edit', $message->id), 'style' => 'display: inline', 'method' => 'GET')) }}
@@ -102,6 +120,12 @@
 
         input.addEventListener('input', evt => {
             remaining_chars.innerHTML = 500 - input.value.length;
+        });
+
+        const image = document.querySelector('#image-upload');
+        const name = document.querySelector('#upload-name');
+        image.addEventListener('change', evt => {
+            name.innerHTML = evt.target.value.split("\\").pop();
         });
 
         const delete_id = document.querySelector('#delete-message');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Message;
 use App\Http\Resources\PostsResource;
 use Redirect;
@@ -49,7 +51,15 @@ class MessagesController extends Controller
         $user_id = Auth::id();
         $message = new Message;
         $message->message = Input::get('message');
+
+        $image = Input::file('image');
+        $ext = $image->getClientOriginalExtension();
+        Storage::disk('public')->put($image->getFilename() . '.' . $ext, File::get($image));
+
         $message->user = $user_id;
+        $message->mime = $image->getClientMimeType();
+        $message->original_filename = $image->getClientOriginalName();
+        $message->filename = $image->getFilename() . '.' . $ext;
         $message->save();
 
         return Redirect::to('posts');
@@ -64,6 +74,15 @@ class MessagesController extends Controller
     public function show($id)
     {
         $messages = Message::whereUser($id)->orderBy('created_at', 'desc')->whereDeleted(0)->get();
+        foreach ($messages as $message) {
+            if ($message['filename']) {
+                $message['image'] = env('APP_URL') . '/public/uploads/' . $message['filename'];
+            }
+            unset($message->deleted);
+            unset($message->filename);
+            unset($message->mime);
+            unset($message->original_filename);
+        }
         PostsResource::withoutWrapping();
         return new PostsResource($messages);
     }
