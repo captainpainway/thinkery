@@ -5,7 +5,7 @@
 
             <div class="content m-b-md">
                 <div class="title">
-                    thinkery.blog
+                    thinkery
                 </div>
                 <p>minimalist microblogging</p>
 
