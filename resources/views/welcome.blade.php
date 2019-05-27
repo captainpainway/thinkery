@@ -44,7 +44,7 @@
                         </button>
                     </div>
                 </form>
-                <a href="/posts"><p class="small">What is thinkery?</p></a>
+                <a href="https://github.com/captainpainway/thinkery"><p class="small">What is thinkery?</p></a>
             </div>
         </div>
 @endsection
